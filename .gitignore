@@ -1,0 +1,10 @@
+# binstubs / executables
+bin/*
+!bin/.keep
+
+# images
+iso/*.iso
+qcow/*.qcow2
+
+# macOS
+.DS_Store

@@ -1,0 +1,52 @@
+<domain type='qemu' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
+    <name>fedora35</name>
+    <uuid>5730b0d9-4b14-440d-9ce8-532d3f3a984e</uuid>
+    <memory unit='GiB'>2</memory>
+    <cpu mode='custom' match="exact">
+       <model>host</model>
+    </cpu>
+    <vcpu>2</vcpu>
+    <features>
+        <gic version='2'/>
+    </features>
+    <os firmware='efi'>
+        <type arch='aarch64' machine='virt'>hvm</type>
+    </os>
+    <clock offset='localtime'/>
+    <devices>
+        <emulator>/opt/homebrew/bin/qemu-system-aarch64</emulator>
+        <controller type='usb' model='qemu-xhci'/>
+        <disk type='file' device='disk'>
+            <driver name='qemu' type='qcow2'/>
+            <source file='/Users/alex/vms/qcow/fedora35.qcow2'/>
+            <target dev='vda' bus='virtio'/>
+            <boot order='1'/>
+        </disk>
+        <disk type='file' device='disk'>
+            <driver name='qemu' type='raw'/>
+            <source file='/Users/alex/vms/iso/Fedora-Server-dvd-aarch64-35-1.2.iso'/>
+            <target dev='vdb' bus='virtio'/>
+            <boot order='2'/>
+        </disk>
+        <console type='pty'>
+            <target type='serial'/>
+        </console>
+        <input type='tablet' bus='usb'/>
+        <input type='keyboard' bus='usb'/>
+        <graphics type='vnc' port='5900' listen='127.0.0.1'/>
+        <video>
+            <model type='virtio' vram='32768'/>
+        </video>
+    </devices>
+    <seclabel type='none'/>
+    <qemu:commandline>
+        <qemu:arg value='-machine'/>
+        <qemu:arg value='highmem=off'/>
+        <qemu:arg value='-accel'/>
+        <qemu:arg value='hvf'/>
+        <qemu:arg value='-netdev'/>
+        <qemu:arg value='user,id=n1,hostfwd=tcp::2222-:22,hostfwd=tcp::3000-:3000'/>
+        <qemu:arg value='-device'/>
+        <qemu:arg value='virtio-net-pci,netdev=n1,bus=pcie.0,addr=0x19'/>
+  </qemu:commandline>
+</domain>

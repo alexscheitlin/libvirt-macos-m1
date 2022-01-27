@@ -116,11 +116,11 @@ brew services start libvirt
 - Copy the `./xml/fedora35.xml` and adjust it to your needs:
     - set a new `name` on line 2
     - set a unique `uuid` on line 3
-    - set the `path` to you disk image on line 21 (will be created below)
+    - set the `path` to your disk image on line 21 (will be created below)
     - set the `path` to your iso file on line 27
     - set a `port` (e.g. 5900) to connect to the vm using vnc on line 36
     - set a `port` (e.g. 2222) to connect to the vm using ssh on line 48
-    - additionally expose ports (e.g. 3000 for development servers)
+    - expose additional `ports` (e.g. 3000 for development servers) on line 48
 
 ```bash
 # create a disk image
@@ -130,7 +130,7 @@ qemu-img check qcow/fedora35.qcow2
 
 # define and start the vm
 virsh define xml/fedora35.xml
-virsh start fedora
+virsh start fedora35
 
 # use vnc to install server (localhost:5900)
 ```
@@ -142,14 +142,14 @@ virsh start fedora
 virsh list --all
 
 # stop the vm
-virsh shutdown fedora
+virsh shutdown fedora35
 
 # create a new layer on top of the current layer
 mv qcow/fedora35.qcow2 qcow/fedora35_00.qcow2
 qemu-img create -f qcow2 -b fedora35_00.qcow2 qcow/fedora35.qcow2 -F qcow2
 
 # restart the vm with the new layer
-virsh start fedora
+virsh start fedora35
 ```
 
 ## Access Vm
@@ -158,7 +158,7 @@ virsh start fedora
 # connect to vm and forward vm ports to localhost
 cat <<EOT >> ./bin/fedora35
 #!/bin/bash
-ssh -p 2223 -L3000:localhost:3000 alex@localhost
+ssh -p 2222 -L3000:localhost:3000 alex@localhost
 EOT
 
 chmod +x ./bin/fedora35
@@ -170,5 +170,5 @@ chmod +x ./bin/fedora35
 
 ```bash
 # undefine the vm
-virsh undefine fedora --nvram
+virsh undefine fedora35 --nvram
 ```

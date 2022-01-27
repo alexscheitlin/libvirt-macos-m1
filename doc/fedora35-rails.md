@@ -25,20 +25,6 @@ echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 exec $SHELL
 
-# install ruby
-rbenv install 3.0.1
-rbenv global 3.0.1
-ruby -v
-
-# dont install the documentation for each package locally
-echo "gem: --no-ri --no-rdoc" > ~/.gemrc
-
-# install bundler
-gem install bundler
-
-# rehash after installing a new ruby version/gem (to load executables fo rbenv)
-rbenv rehash
-
 # install mariadb
 sudo dnf install -y mariadb-server
 sudo systemctl start mariadb
@@ -53,11 +39,32 @@ sudo npm install --global yarn
 
 # install tools
 sudo dnf install vim
+
+# exit and create new layer
+exit
+virsh shutdown fedora35
+mv qcow/fedora35.qcow2 qcow/fedora35_01.qcow2
+qemu-img create -f qcow2 -b fedora35_01.qcow2 qcow/fedora35.qcow2 -F qcow2
 ```
 
 ## fedora35_02
 
 ```bash
+# install ruby
+rbenv install 3.0.1
+rbenv global 3.0.1
+ruby -v
+
+# dont install the documentation for each package locally
+echo "gem: --no-ri --no-rdoc" > ~/.gemrc
+
+# install bundler
+gem install bundler
+
+# rehash after installing a new ruby version/gem (to load executables fo rbenv)
+rbenv rehash
+
+# create new project
 mkdir project && cd $_
 echo "source 'https://rubygems.org'
 ruby   '3.0.1'
